@@ -1,0 +1,52 @@
+.form span {
+    min-width: 70px;
+}
+
+.form label {
+    display: flex;
+    margin: 10px 0px;
+}
+
+.form {
+    background-color: white;
+    height: 45vh;
+    width: 48vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 1px 2px 2px 20px #42b5d4;
+}
+.form input{
+    border: 0px;
+    border-bottom: 1px solid rgb(90, 86, 86);
+    padding: 20px;
+    width: 30vh;
+    font-size: 25px;
+}
+input:active{
+    border: 0px;
+    border-bottom: 1px solid rgb(49, 130, 236);
+}
+input:focus {
+    border-bottom: 1px solid rgb(49, 130, 236);
+}
+.container_form {
+    height: 100vh;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../../assets/bgLogin.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.form button {
+    margin-top: 25px;
+    padding: 15px 30px;
+    border-radius: 10px;
+    background-color: jaune;
+    border: none;
+    font-size: 18px;
+}
