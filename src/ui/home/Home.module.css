@@ -128,7 +128,12 @@
 }
 
 /*style of discussion*/
-
+.animationChat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
 .message_container{
     display: flex;
     flex-direction: column;
@@ -156,16 +161,38 @@
     max-width: 300px;
     border-bottom-right-radius: 10px;
     color: white;
+    margin: 4px 0px;
+    align-self: flex-end;
+}
+
+.message_card_friend {
+    padding: 5px;
+    width: max-content;
+    max-width: 300px;
+    border-bottom-right-radius: 10px;
+    color: white;
     margin: 4px 5px;
+    background-color: #15133C;
 }
 
 .message_detail {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: min-content;
+    height: max-content;
+    margin: 20px 0px;
+    padding: 0px 4px;
+    width: 100%;
+}
+.message_friend_detail{
     display: flex;
     align-items: flex-start;
     width: min-content;
     height: max-content;
     margin: 20px 0px;
-
+    padding: 0px 4px;
+    width: 100%;
 }
 
 .min_avatar {

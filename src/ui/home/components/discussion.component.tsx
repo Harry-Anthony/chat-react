@@ -9,7 +9,8 @@ import { useEffect, useState } from "react";
 import boy from '../../../assets/boy.png'
 import { io } from "socket.io-client";
 import { User } from "../../../models/i_user";
-
+import Lottie from 'react-lottie';
+import animationChat from '../../../assets/chat.json';
 export interface DiscussionProps {
     me: User
 }
@@ -22,17 +23,26 @@ export function Discussion(props: any) {
     let user: User | null = JSON.parse(data!);
     const socket = io("http://localhost:3000");
     let ignore = false
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationChat,
+        rendererSettings: {
+          preserveAspectRatio: "xMidYMid slice"
+        }
+      };
     useEffect(() => {
         if (friend) {
-            console.log("selected friend in discussion", friend);
-            console.log("user", user);
             socket.emit("message:read", {
                 userId: user?._id,
                 friendId: friend._id,
             });
-
             socket.on(`message:${user?._id}:${friend._id}`, (message) => {
-                dispatch(getListMessage(message.allMessage))
+                if (message != null) {
+                    dispatch(getListMessage(message.allMessage));
+                } else {
+                    dispatch(getListMessage([]));
+                }
             });
             socket.on(`message:create:${user?._id}:${friend._id}`, (message) => {
                 dispatch(sendMessage(message))
@@ -46,6 +56,15 @@ export function Discussion(props: any) {
             }
         }
     }, [friend]);
+    if (!friend) {
+        return (
+            <div className={styles.animationChat}>
+                <Lottie
+                    options={defaultOptions}
+                />
+            </div>
+        )
+    }
     return (
         <div className={styles.message_container}>
             <div className={styles.header_message}>
@@ -61,7 +80,13 @@ export function Discussion(props: any) {
             <div className={styles.all_message}>
                 {
                     allMessage.length != 0 ?
-                        allMessage.map((e) => <MessageCard message={e.content} avatar={e.userSender.avatar} />) :
+                        allMessage.map((e) => {
+                            return <MessageCard
+                                isMe={e.userSender._id != friend?._id}
+                                message={e.content}
+                                avatar={e.userSender.avatar}
+                            />
+                        }) :
                         (<div className={styles.no_message_text}>
                             Aucune discussion
                         </div>)
@@ -81,11 +106,10 @@ export function Discussion(props: any) {
                 <button className={styles.button_send} onClick={
                     (e) => {
                         if (message.length != 0 && friend) {
-                            console.log("sending message", message);
                             socket.emit("message:create", {
                                 body: {
-                                    "userSender": "62a22462df2dd55da9abd06e",
-                                    "userReceiver": "62a82e1f63d0d04f0f38cfaa",
+                                    "userSender": user?._id,
+                                    "userReceiver": friend._id,
                                     "type": "text",
                                     "content": message,
                                 },

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { RemoteSourceImpl } from "../../data/remote_source_impl";
 import { IAuthRepository } from "../../interface/repository/auth/auth_repository";
 import { User } from "../../models/i_user";

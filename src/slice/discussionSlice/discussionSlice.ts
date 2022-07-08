@@ -24,7 +24,6 @@ export const discussionSlice = createSlice({
             state.listMessage = action.payload
         },
         selectFriendForDiscussion: (state, action: PayloadAction<User>) => {
-            console.log("selected friend", action.payload);
             state.friendSelected = action.payload;
         },
     }

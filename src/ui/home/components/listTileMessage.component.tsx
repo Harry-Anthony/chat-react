@@ -9,7 +9,6 @@ export interface ListTileMessageProps {
 }
 
 export function ListTileMessage(props: ListTileMessageProps) {
-    console.log("props", props.message);
     const dispatch = useAppDispatch();
     return (
         <div className={styles.list_tile_message} onClick={()=>{
