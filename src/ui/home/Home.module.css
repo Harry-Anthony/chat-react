@@ -45,17 +45,29 @@
 }
 
 /*style list message*/
+
+.user_info {
+    font-size: 20px;
+    color: white;
+    background-color: #299fff80;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 10px;
+    align-items: center;
+    border-bottom-right-radius: 30px;
+}
 .list_message {
+    width: 300px;
     background-color: #fafafa;
-    padding: 0px 20px;
 }
 
 .list_tile_message {
-    width: 300px;
     height: 50px;
-    margin: 40px 0px;
+    margin: 40px 10px;
+    max-height: 50px;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 
 .message {
@@ -84,7 +96,7 @@
 .container_input_search {
     display: flex;
     align-items: center;
-    margin: 30px 0px;
+    margin: 30px 10px;
 }
 
 .input_search {

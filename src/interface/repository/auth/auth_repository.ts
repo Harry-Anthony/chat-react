@@ -1,3 +1,4 @@
 export interface IAuthRepository {
-    login(name: string, password: string): any;
+    login(mail: string, password: string): any;
+    register(name: string,mail: string, password: string): any;
 }

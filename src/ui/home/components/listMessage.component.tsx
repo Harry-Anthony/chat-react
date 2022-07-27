@@ -7,6 +7,7 @@ import { User } from "../../../models/i_user";
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { searchUser, selectListUser, updateListUser } from '../../../slice/userSlice/userSlice';
 import { SearchResult } from './searchResult.component';
+import boy from '../../../assets/boy.png'
 
 
 export function ListMessage() {
@@ -26,7 +27,6 @@ export function ListMessage() {
             });
         }
         socket.on(`discussion:${user?._id}`, (discussion) => {
-            console.log("discussion", discussion);
             if (discussion != null) {
                 setDiscussion(discussion.discussion);
             } else {
@@ -40,6 +40,16 @@ export function ListMessage() {
     }, []);
     return (
         <div className={styles.list_message}>
+            <div className={styles.user_info}>
+                <div className={styles.user_profil}>
+                    <div className={styles.avatar_circle}>
+                        <div className={styles.status_circle}></div>
+                        <img src={user?.avatar ?? boy} className={styles.avatar} />
+                    </div>
+                </div>
+                <span>{user?.name}</span>
+                <span>{user?.mail}</span>
+            </div>
             <div className={styles.container_input_search}>
                 <input
                     type="text"
@@ -48,7 +58,7 @@ export function ListMessage() {
                     className={styles.input_search}
                     onChange={(e) => {
                         setSearchInput(e.target.value);
-                        if(e.target.value) {
+                        if (e.target.value) {
                             dispatch(searchUser(e.target.value));
                         } else {
                             //TODO: set list to list void

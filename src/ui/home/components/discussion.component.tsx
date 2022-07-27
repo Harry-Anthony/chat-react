@@ -11,6 +11,7 @@ import { io } from "socket.io-client";
 import { User } from "../../../models/i_user";
 import Lottie from 'react-lottie';
 import animationChat from '../../../assets/chat.json';
+import TextField from '@mui/material/TextField';
 export interface DiscussionProps {
     me: User
 }
@@ -28,9 +29,9 @@ export function Discussion(props: any) {
         autoplay: true,
         animationData: animationChat,
         rendererSettings: {
-          preserveAspectRatio: "xMidYMid slice"
+            preserveAspectRatio: "xMidYMid slice"
         }
-      };
+    };
     useEffect(() => {
         if (friend) {
             socket.emit("message:read", {
@@ -103,6 +104,9 @@ export function Discussion(props: any) {
                     }}
                 >
                 </textarea>
+                {/* <TextField sx={{
+                    width: '100%',
+                }} id="standard-basic" label="Message" variant="standard" /> */}
                 <button className={styles.button_send} onClick={
                     (e) => {
                         if (message.length != 0 && friend) {

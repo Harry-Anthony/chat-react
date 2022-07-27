@@ -5,9 +5,14 @@ export class AuthRepository implements IAuthRepository {
     remoteSource: RemoteSource;
     constructor(data: any) {
         this.remoteSource = data;
-    };
-    async login(name: string, password: string) {
-        const data = await this.remoteSource.login(name, password);
+    }
+    async register(name: string, mail: string, password: string) {
+        const data = await this.remoteSource.register(name, mail, password);
+        return data;
+    }
+;
+    async login(mail: string, password: string) {
+        const data = await this.remoteSource.login(mail, password);
         return data;
     }
 }

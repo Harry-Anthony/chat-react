@@ -8,45 +8,86 @@
 }
 
 .form {
-    background-color: white;
-    height: 45vh;
-    width: 48vh;
+    height: 70vh;
+    width: 50vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 5px 5px 20px #242F9B;
+    /* padding: 10px; */
+}
+.illust_login {
+    background-color: #c7e6ff;
+    border-radius: 10px;
+    padding: 10px;
+    width: 50%;
+    height: 100%;
+}
+.main_form{
+    /* 3469c8 */
+    background-color: rgba(52,105,200,0.5);
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-radius: 10px;
-    box-shadow: 1px 2px 2px 20px #42b5d4;
+    width: 50%;
+    height: 100%;
+}
+.form form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .form input{
     border: 0px;
     border-bottom: 1px solid rgb(90, 86, 86);
-    padding: 20px;
-    width: 30vh;
-    font-size: 25px;
+    padding: 15px;
+    width: 13vw;
+    font-size: 18px;
+}
+.welcome_text {
+    color: #fff;
+    font-size: 40px;
+    margin-bottom: 50px;
 }
 input:active{
     border: 0px;
     border-bottom: 1px solid rgb(49, 130, 236);
 }
 input:focus {
-    border-bottom: 1px solid rgb(49, 130, 236);
+    outline: none;
 }
 .container_form {
+    background-image: url('../../assets/bg_login.jpg');
+    background-color: #646FD4;
     height: 100vh;
     width: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url(../../assets/bgLogin.jpg);
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 .form button {
-    margin-top: 25px;
+    margin-top: 40px;
     padding: 15px 30px;
     border-radius: 10px;
     background-color: jaune;
     border: none;
+    font-size: 18px;
+}
+.signUp_text {
+    margin-top: 50px;
+    color: white;
+}
+.signUp_text a::before {
+    content: " ";
+    width: 25px;
+}
+.link_sign_up {
+    color: #b3d5f1;
+    text-decoration: none;
     font-size: 18px;
 }
