@@ -1,14 +1,18 @@
 import { Navigate, Outlet  } from 'react-router-dom';
 
-
 function ProtectedRoute(props: any) {
-  let isAuthenticated: any = localStorage.getItem("isAuthenticated");
-  const token = localStorage.getItem("token");
-  if(!token) {
+  let isAuthenticated: any = true;
+  const user = localStorage.getItem("user");
+  if(!user) {
     isAuthenticated = false;
   }
+  if(props.isHome) {
+    return (
+      isAuthenticated ? <Outlet /> : <Navigate to={props.goal} />
+    );
+  }
   return (
-    isAuthenticated ? <Outlet /> : <Navigate to="/" />
+    isAuthenticated ? <Navigate to={props.goal} /> : <Outlet /> 
   );
 }
 

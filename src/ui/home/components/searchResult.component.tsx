@@ -1,8 +1,8 @@
 import { User } from "../../../models/i_user"
 import styles from '../Home.module.css';
 import boy from '../../../assets/boy.png'
-import { selectFriendForDiscussion } from "../../../slice/discussionSlice/discussionSlice";
-import { useAppDispatch } from "../../../store/hooks";
+import { selectFriend, selectFriendForDiscussion } from "../../../slice/discussionSlice/discussionSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 
 interface searchResultProps {
     user: User;
@@ -10,10 +10,13 @@ interface searchResultProps {
 
 export function SearchResult(props: searchResultProps) {
     const dispatch = useAppDispatch();
+    const friend = useAppSelector(selectFriend);
 
     return (
         <div className={styles.list_tile_message} onClick={() => {
-            dispatch(selectFriendForDiscussion(props.user))
+            if(!friend || friend._id != props.user._id) {
+                dispatch(selectFriendForDiscussion(props.user))
+            }
         }}>
             <div className={styles.avatar_circle}>
                 <div className={styles.status_circle}></div>

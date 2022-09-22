@@ -1,4 +1,4 @@
-export  enum LoginStatus {
+export  enum AuthStatus {
     error,
     success,
     initial,

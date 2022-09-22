@@ -4,7 +4,7 @@ import { IAuthRepository } from "../../interface/repository/auth/auth_repository
 import { User } from "../../models/i_user";
 import { AuthRepository } from "../../repository/auth/auth_repository";
 import { RootState } from "../../store/store";
-import { LoginStatus } from "./login_enum";
+import { AuthStatus } from "./login_enum";
 
 
 export enum InputType {
@@ -12,14 +12,14 @@ export enum InputType {
   register
 }
 export interface AuthState {
-  status: LoginStatus,
+  status: AuthStatus,
   user: User | null,
   inputType: InputType
   errorMessage: string | null
 }
 
 const initialState: AuthState = {
-  status: LoginStatus.initial,
+  status: AuthStatus.initial,
   user: null,
   inputType: InputType.login,
   errorMessage: ""
@@ -60,42 +60,47 @@ export const authSlice = createSlice({
   reducers: {
     setInputType: (state, action: PayloadAction<InputType>) => {
       state.inputType = action.payload;
-    }
+    },
+    setStatus: (state, action: PayloadAction<AuthStatus>) => {
+      state.status = action.payload
+    },
+    resetAuth: () => initialState
   },
-
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.status = LoginStatus.loading;
+        state.status = AuthStatus.loading;
       })
       .addCase(login.fulfilled, (state, action) => {
         const payload = action.payload;
         localStorage.setItem("isAuthenticated", "true");
         localStorage.setItem("token", payload.token)
         localStorage.setItem("user", JSON.stringify(payload.user));
-        state.status = LoginStatus.success;
+        state.status = AuthStatus.success;
         state.user = payload.user
       })
       .addCase(login.rejected, (state) => {
-        state.status = LoginStatus.error;
+        state.errorMessage = "vérifier votre mail ou mot de passe"
+        state.status = AuthStatus.error;
       });
 
     builder.addCase(register.pending, (state) => {
-      state.status = LoginStatus.loading;
+      state.status = AuthStatus.loading;
     }).addCase(register.fulfilled, (state, action) => {
       const payload = action.payload;
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("token", payload.token)
       localStorage.setItem("user", JSON.stringify(payload.user));
-      state.status = LoginStatus.success;
+      state.status = AuthStatus.success;
       state.user = payload.user;
     }).addCase(register.rejected, (state, action) => {
+      state.errorMessage = "vérifier l'information que vous avez entré"
       if(action.error.message?.includes("401")) {
         state.errorMessage = "Mail déjà utilisé";
       } else {
         state.errorMessage = "une erreur est survenue du server";
       }
-      state.status = LoginStatus.error;
+      state.status = AuthStatus.error;
     })
   },
 });
@@ -103,9 +108,9 @@ export const authSlice = createSlice({
 
 
 
-export const { setInputType } = authSlice.actions;
+export const { setInputType, setStatus, resetAuth } = authSlice.actions;
 
-export const loginStatus = (state: RootState) => state.auth.status
+export const selectAuthStatus = (state: RootState) => state.auth.status
 export const selectInputType = (state: RootState) => state.auth.inputType;
 export const selectUser = (state: RootState) => state.auth.user
 export const selectErrorMessage = (state: RootState) => state.auth.errorMessage

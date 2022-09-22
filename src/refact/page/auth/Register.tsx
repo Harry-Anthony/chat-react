@@ -1,13 +1,22 @@
-import { useAppDispatch } from "../../../store/hooks";
-import { login, setInputType, InputType, register } from "../../../slice/authSlice/authSlice";
-import { useState } from "react";
-import styles from "../Auth.module.css";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { register, setInputType, InputType, selectAuthStatus } from "../../../slice/authSlice/authSlice";
+import { AuthStatus } from "../../../slice/authSlice/login_enum";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import styles from "./auth.module.css";
 
-export function RegisterComponent() {
+export function Register() {
     let [name, setName] = useState("");
+    let status = useAppSelector(selectAuthStatus);
     let [mail, setMail] = useState("");
     let [password, setPassword] = useState("");
     let dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (status == AuthStatus.success) {
+            navigate('/chatHome', {replace: true});
+        }
+    }, [status])
     return (
         <div className={styles.main_form}>
             <span className={styles.welcome_text}>WELCOME</span>
@@ -37,7 +46,8 @@ export function RegisterComponent() {
                     className={styles.link_sign_up}
                     href="#"
                     onClick={() => {
-                        dispatch(setInputType(InputType.login))
+                        //TODO: switch to login component
+                        navigate('/')
                     }}
                 >
                     Sign in

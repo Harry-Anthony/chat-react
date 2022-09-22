@@ -62,7 +62,7 @@ input:focus {
     outline: none;
 }
 .container_form {
-    background-image: url('../../assets/bg_login.jpg');
+    background-image: url('../../../assets/bg_login.jpg');
     background-color: #646FD4;
     height: 100vh;
     width: auto;

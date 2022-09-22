@@ -4,17 +4,17 @@ import IUserRepository from "../../interface/repository/user/user_repository";
 import { User } from "../../models/i_user";
 import { UserRepository } from "../../repository/user/user_repository";
 import { RootState } from "../../store/store";
-import { LoginStatus } from "../authSlice/login_enum";
+import { AppState } from "../../refact/tools/enum/app_enum";
 
 
 export interface UserState {
     listUser: User[] | null;
-    status: LoginStatus;
+    status: AppState;
 }
 
 const initialState: UserState = {
     listUser: null,
-    status: LoginStatus.initial
+    status: AppState.initial
 }
 
 let repository: IUserRepository = new UserRepository(new RemoteSourceImpl());
@@ -23,7 +23,7 @@ export const searchUser = createAsyncThunk(
     'user/searchUser',
     async (keyWord: string) => {
         const response = await repository.searchUser(keyWord);
-        if(!response.data) {
+        if (!response.data) {
             return []
         }
         return response.data
@@ -36,23 +36,38 @@ export const userSlice = createSlice({
     reducers: {
         updateListUser: (state) => {
             state.listUser = [];
+        },
+        resetUserSlice: () => {
+            localStorage.removeItem("isAuthenticated");
+            localStorage.removeItem("token")
+            localStorage.removeItem("user");
+            return initialState
         }
     },
     extraReducers: (builder) => {
         builder.addCase(searchUser.pending, (state) => {
-            state.status = LoginStatus.loading;
+            state.status = AppState.loading;
         });
         builder.addCase(searchUser.fulfilled, (state, action) => {
-            state.listUser = action.payload.users;
-            state.status = LoginStatus.success
+            let users = action.payload.users
+            let user = JSON.parse(localStorage.getItem("user")!);
+
+            if (users.length != 0) {
+                users = users.filter((e: any) => {
+                    return e._id != user?._id
+                })
+            }
+            console.log("users found in search", users);
+            state.listUser = users;
+            state.status = AppState.success
         })
         builder.addCase(searchUser.rejected, (state) => {
-            state.status = LoginStatus.error;
+            state.status = AppState.error;
         })
     }
 });
 
-export const {updateListUser} = userSlice.actions;
+export const { updateListUser, resetUserSlice } = userSlice.actions;
 export const searchUserStatus = (state: RootState) => state.user.status;
 export const selectListUser = (state: RootState) => state.user.listUser;
 
