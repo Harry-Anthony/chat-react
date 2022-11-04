@@ -57,7 +57,6 @@ export const userSlice = createSlice({
                     return e._id != user?._id
                 })
             }
-            console.log("users found in search", users);
             state.listUser = users;
             state.status = AppState.success
         })

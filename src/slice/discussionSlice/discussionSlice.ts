@@ -8,18 +8,22 @@ import { RootState } from "../../store/store";
 
 export interface DiscussionState {
     listMessage: any[];
-    chatList: any[];
+    chatList: any;
     friendSelected: any | null;
     discDataState: AppState;
     chatDataState: AppState;
+    anotherMessageState: AppState;
 };
 
 const initialState: DiscussionState = {
     discDataState: AppState.initial,
     listMessage: [],
     friendSelected: null,
-    chatList: [],
-    chatDataState: AppState.initial
+    chatList: {
+        allMessage: []
+    },
+    chatDataState: AppState.initial,
+    anotherMessageState: AppState.initial
 }
 
 export const chatRepository = new ChatRepository();
@@ -28,11 +32,11 @@ export const chatRepository = new ChatRepository();
 export const getAllDiscussion = createAsyncThunk(
     'message/chat',
     async (user: string) => {
-        await new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve("200")
-            }, 3000);
-        })
+        // await new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve("200")
+        //     }, 3000);
+        // })
         const result = await chatRepository.getUserDiscussion(user);
         return result.data;
     }
@@ -41,11 +45,24 @@ export const getAllDiscussion = createAsyncThunk(
 export const getLastMessage = createAsyncThunk(
     'message/lastMessage',
     async ({ firstId, secondId, lastIndex }: { firstId: string, secondId: string, lastIndex: any }) => {
-        await new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve("200")
-            }, 3000);
-        });
+        // await new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve("200")
+        //     }, 3000);
+        // });
+        const result = await chatRepository.getLastMessage({ firstId, secondId, lastIndex });
+        return result.data;
+    }
+)
+
+export const getAnotherMessage = createAsyncThunk(
+    'message/anotherMessage',
+    async ({ firstId, secondId, lastIndex }: { firstId: string, secondId: string, lastIndex: any }) => {
+        // await new Promise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve("200")
+        //     }, 3000);
+        // });
         const result = await chatRepository.getLastMessage({ firstId, secondId, lastIndex });
         return result.data;
     }
@@ -55,17 +72,17 @@ export const discussionSlice = createSlice({
     name: 'discussion',
     initialState,
     reducers: {
-        sendMessage: (state, action: PayloadAction<Message>) => {
-            state.chatList.push(action.payload);
-        },
-        getListMessage: (state, action: PayloadAction<Message[]>) => {
-            state.listMessage = action.payload
-        },
         setChatList: (state, action: PayloadAction<any>) => {
-            state.chatList = action.payload
+            state.chatList.allMessage = action.payload.allMessage;
+            state.chatList.count = action.payload.count;
         },
         addMessage: (state, action: PayloadAction<any>) => {
-            state.chatList.push(action.payload);
+            let index = state.listMessage.findIndex((value) => value.friend._id === state.friendSelected?._id);
+            if(index >=0 ){
+                state.listMessage[index].friend.count++;
+            }
+            state.chatList.allMessage.push(action.payload);
+            state.chatList.count++;
         },
         handleDiscussion: (state, action: PayloadAction<any>) => {
             let newMessage = action.payload;
@@ -82,7 +99,9 @@ export const discussionSlice = createSlice({
                 allMessage = state.listMessage[index].friend.allMessage
                 allMessage.push(action.payload)
             } else {
+                // if friend is not available inside the discussion
                 allMessage = [action.payload]
+                tempFriend.count = 1;
             }
             let tempList = state.listMessage.filter((value) => value.friend._id != tempFriend._id);
             tempFriend = {...tempFriend, allMessage}
@@ -95,7 +114,7 @@ export const discussionSlice = createSlice({
         },
         selectFriendForDiscussion: (state, action: PayloadAction<User>) => {
             if (state.friendSelected && state.friendSelected._id != action.payload._id) {
-                state.chatList = [];
+                state.chatList.allMessage = [];
             }
             state.friendSelected = action.payload;
         },
@@ -110,7 +129,6 @@ export const discussionSlice = createSlice({
             state.discDataState = AppState.loading;
         })
             .addCase(getAllDiscussion.fulfilled, (state, action) => {
-                console.log(action.payload);
                 if (action.payload.messages) {
                     state.listMessage = action.payload.messages.discussion;
                 } else {
@@ -128,32 +146,54 @@ export const discussionSlice = createSlice({
             state.chatDataState = AppState.loading;
         })
             .addCase(getLastMessage.fulfilled, (state, action) => {
-                let payload = action.payload.discussion;
-                console.log("payload ", action.payload);
-                if (payload) {
-                    state.chatList = payload.allMessage;
+                // let payload = action.payload.discussion;
+                let count = 0;
+                if (action.payload.discussion) { 
+                    count = action.payload.discussion.count;
+                    state.chatList.allMessage = action.payload.discussion.allMessage;
+                    state.chatList.count = count
                 } else {
-                    state.chatList = [];
+                    state.chatList.allMessage = [];
+                    state.chatList.count = 0;
                 }
                 let index = state.listMessage.findIndex((value) => value.friend._id === state.friendSelected?._id);
                 if (index >= 0) {
-                    state.listMessage[index].friend.allMessage = state.chatList;
+                    state.listMessage[index].friend.allMessage = state.chatList.allMessage;
+                    state.listMessage[index].friend.count = count;
                 }
                 state.chatDataState = AppState.success;
             })
             .addCase(getLastMessage.rejected, (state, action) => {
                 state.chatDataState = AppState.error;
             });
+        builder.addCase(getAnotherMessage.pending, (state) => {
+                state.anotherMessageState = AppState.loading;
+            })
+            .addCase(getAnotherMessage.fulfilled, (state, action) => {
+                let payload = action.payload.discussion;
+                state.anotherMessageState = AppState.success;
+                state.chatList.allMessage = [...payload.allMessage, ...state.chatList.allMessage];
+                let index = state.listMessage.findIndex((value) => value.friend._id === state.friendSelected?._id);
+                if (index >= 0) {
+                    state.listMessage[index].friend.allMessage = state.chatList.allMessage;
+                }
+            })
+            .addCase(getAnotherMessage.rejected, (state, action) => {
+                state.chatDataState = AppState.error;
+            });
     }
 });
 
-export const { sendMessage, getListMessage, addMessage, selectFriendForDiscussion, setChatList, handleDiscussion, resetDiscussionSlice } = discussionSlice.actions;
+export const { addMessage, selectFriendForDiscussion, setChatList, handleDiscussion, resetDiscussionSlice } = discussionSlice.actions;
 
 export const selectListMessage = (state: RootState) => state.discussion.listMessage;
 export const selectChatList = (state: RootState) => state.discussion.chatList;
 export const selectFriend = (state: RootState) => state.discussion.friendSelected;
 export const selectDiscussionState = (state: RootState) => state.discussion.discDataState;
 export const selectChatDataState = (state: RootState) => state.discussion.chatDataState;
+export const selectAnotherMessageState = (state: RootState) => state.discussion.anotherMessageState;
+
+
 
 
 export default discussionSlice.reducer;

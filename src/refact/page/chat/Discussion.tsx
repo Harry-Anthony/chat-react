@@ -1,6 +1,6 @@
 import { css, StyleSheet } from "aphrodite";
 import { useContext, useEffect, useState } from "react";
-import { addMessage, getAllDiscussion, handleDiscussion, resetDiscussionSlice, selectDiscussionState, selectListMessage } from "../../../slice/discussionSlice/discussionSlice";
+import { getAllDiscussion, handleDiscussion, resetDiscussionSlice, selectDiscussionState, selectListMessage } from "../../../slice/discussionSlice/discussionSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
 import { SocketContext } from "../../service/socket";
 import { UserContext } from "../../service/user";
@@ -39,7 +39,6 @@ export function Discussion() {
     useEffect(() => {
         if (discussionState == AppState.success) {
             socket.on(`discussion:${user._id}`, (message: any) => {
-                console.log("push message", message)
                 dispatch(handleDiscussion(message));
             })
         }
@@ -82,12 +81,14 @@ export function Discussion() {
                         }}
                     />
                 </div>
-                {
-                    status === AppState.loading ? <div>loading</div> :
-                        (listUser?.length != 0 ? listUser?.map((e) => {
-                            return <SearchResult key={e._id} user={e} />
-                        }) : <div>no search result</div>)
-                }
+                <div className={css(styles.discussion)}>
+                    {
+                        status === AppState.loading ? <div>loading</div> :
+                            (listUser?.length != 0 ? listUser?.map((e: any) => {
+                                return <SearchResult key={e._id} friend={e} />
+                            }) : <div>no search result</div>)
+                    }
+                </div>
             </div>
         )
     }
@@ -132,7 +133,7 @@ export function Discussion() {
                 navigate('/', { replace: true })
             }}>
                 <img src="" alt="" />
-                <span>Logout</span>
+                <button>Logout</button>
             </div>
         </div>
     )
@@ -145,7 +146,6 @@ const styles = StyleSheet.create({
         width: "300px",
         height: "100vh",
         borderRight: "1px solid black",
-        marginRight: "10px"
     },
     icon: {
         width: "20px",
@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
         flex: "100%"
     },
     logout: {
-        padding: '10px 10px'
+        padding: '10px 10px',
+        cursor: 'pointer'
     }
 })

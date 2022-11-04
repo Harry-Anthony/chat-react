@@ -15,7 +15,6 @@ export function Login() {
     useEffect(() => {
 
         if (status == AuthStatus.success) {
-            console.log("auth success")
             navigate('/chatHome', {replace: true});
         }
     }, [status])
@@ -24,7 +23,6 @@ export function Login() {
             <span className={styles.welcome_text}>WELCOME</span>
             <form onSubmit={(e) => {
                 e.preventDefault();
-                console.log("login")
                 dispatch(login({ mail, password }));
             }}>
                 <label>

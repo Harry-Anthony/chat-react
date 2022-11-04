@@ -29,7 +29,6 @@ export class ChatRepository {
         return res;
     }
     static cancelGetLastMessage = () => {
-        console.log("cancel http request")
         sourceGetlastMessage.cancel();
     }
 

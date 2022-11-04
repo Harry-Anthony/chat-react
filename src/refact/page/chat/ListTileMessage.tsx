@@ -1,6 +1,5 @@
-import { selectChatDataState, selectFriend, selectFriendForDiscussion } from "../../../slice/discussionSlice/discussionSlice";
+import { selectFriend, selectFriendForDiscussion } from "../../../slice/discussionSlice/discussionSlice";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
-import boy from '../../../assets/boy.png'
 import { css, StyleSheet } from 'aphrodite';
 import { useContext } from "react";
 import { SocketContext } from "../../service/socket";
@@ -16,7 +15,7 @@ export function ListTileMessage(props: any) {
     const user = useContext(UserContext);
 
     return (
-        <div className={css(styles.container)} onClick={() => {
+        <div className={friend && props.friend._id === friend._id ? css(styles.container, styles.backgroundSelect) : css(styles.container)} onClick={() => {
             if (friend && friend._id != props.friend._id) {
                 socket.removeListener(`message:create:${user._id}:${friend._id}`);
                 dispatch(selectFriendForDiscussion(props.friend))
@@ -42,14 +41,18 @@ export function ListTileMessage(props: any) {
 
 const styles = StyleSheet.create({
     container: {
-        height: "50px",
-        margin: "40px 10px",
-        maxHeight: "50px",
+        height: "100px",
+        margin: "0px 0px",
+        padding: "10px 10px",
+        maxHeight: "100px",
         maxWidth: "max-content",
         display: "flex",
         alignItems: "center",
         overflow: "hidden",
         cursor: "pointer"
+    },
+    backgroundSelect: {
+        backgroundColor: 'rgb(225, 245, 247);',
     },
     avatar: {
         maxWidth: "100%",
@@ -67,15 +70,20 @@ const styles = StyleSheet.create({
     },
     message: {
         color: "rgb(128, 125, 153)",
-        overflowY: "hidden",
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
         fontSize: "14px",
-        maxHeight: "40px"
+        width: "200px",
+        maxHeight: "40px",
+        textAlign: 'start'
     },
     listTile: {
+        maxWidth: "300px",
         width: "300px",
         display: "flex",
         flexDirection: "column",
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        whiteSpace: 'nowrap',
     }
 
 })
