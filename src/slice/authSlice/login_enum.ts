@@ -1,6 +1,6 @@
-export  enum LoginStatus {
-    error,
-    success,
-    initial,
-    loading,
+export enum LoginStatus {
+  error,
+  success,
+  initial,
+  loading,
 }

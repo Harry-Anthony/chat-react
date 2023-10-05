@@ -4,34 +4,37 @@ import { User } from "../../models/i_user";
 import { RootState } from "../../store/store";
 
 export interface DiscussionState {
-    listMessage: Message[];
-    friendSelected: User | null;
-};
-
-const initialState: DiscussionState = {
-    listMessage: [],
-    friendSelected: null
+  listMessage: Message[];
+  friendSelected: User | null;
 }
 
+const initialState: DiscussionState = {
+  listMessage: [],
+  friendSelected: null,
+};
+
 export const discussionSlice = createSlice({
-    name: 'discussion',
-    initialState,
-    reducers: {
-        sendMessage: (state, action: PayloadAction<Message>) => {
-            state.listMessage.push(action.payload);
-        },
-        getListMessage: (state, action: PayloadAction<Message[]>) => {
-            state.listMessage = action.payload
-        },
-        selectFriendForDiscussion: (state, action: PayloadAction<User>) => {
-            state.friendSelected = action.payload;
-        },
-    }
+  name: "discussion",
+  initialState,
+  reducers: {
+    sendMessage: (state, action: PayloadAction<Message>) => {
+      state.listMessage.push(action.payload);
+    },
+    getListMessage: (state, action: PayloadAction<Message[]>) => {
+      state.listMessage = action.payload;
+    },
+    selectFriendForDiscussion: (state, action: PayloadAction<User>) => {
+      state.friendSelected = action.payload;
+    },
+  },
 });
 
-export const { sendMessage, getListMessage, selectFriendForDiscussion } = discussionSlice.actions;
+export const { sendMessage, getListMessage, selectFriendForDiscussion } =
+  discussionSlice.actions;
 
-export const selectListMessage = (state: RootState) => state.discussion.listMessage;
-export const selectFriend = (state: RootState) => state.discussion.friendSelected;
+export const selectListMessage = (state: RootState) =>
+  state.discussion.listMessage;
+export const selectFriend = (state: RootState) =>
+  state.discussion.friendSelected;
 
 export default discussionSlice.reducer;

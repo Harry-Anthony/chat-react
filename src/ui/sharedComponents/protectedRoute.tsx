@@ -8,7 +8,7 @@ function ProtectedRoute(props: any) {
     isAuthenticated = false;
   }
   return (
-    isAuthenticated ? <Outlet /> : <Navigate to="/" />
+    isAuthenticated ? <Outlet /> : <Navigate to="/auth" />
   );
 }
 
