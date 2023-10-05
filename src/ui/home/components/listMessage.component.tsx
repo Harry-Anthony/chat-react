@@ -25,7 +25,7 @@ export function ListMessage() {
   const [searchInput, setSearchInput] = useState("");
   useEffect(() => {
     let data = localStorage.getItem("user");
-    if (data === "" || data == null) {
+    if (!data) {
       navigate("/auth");
     } else {
       setUser(JSON.parse(data!));
@@ -39,7 +39,7 @@ export function ListMessage() {
         });
       }
       socket.on(`discussion:${user?._id}`, (discussion) => {
-        if (discussion != null) {
+        if (discussion && discussion.discussion) {
           setDiscussion(discussion.discussion);
         } else {
           setDiscussion([]);

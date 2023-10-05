@@ -10,13 +10,15 @@ import {
   selectListMessage,
   sendMessage,
 } from "../../../slice/discussionSlice/discussionSlice";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import boy from "../../../assets/boy.png";
 import { User } from "../../../models/i_user";
 import Lottie from "react-lottie";
 import animationChat from "../../../assets/chat.json";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../../utils/socket";
+import { useLazyGetLastMessageQuery } from "../../../repository/Api/chatApi/chatApi";
+import { Message } from "../../../models/i_message";
 
 export interface DiscussionProps {
   me: User;
@@ -28,6 +30,7 @@ export function Discussion(props: any) {
   const [message, setMessage] = useState("");
   const friend = useAppSelector(selectFriend);
   const [user, setUser] = useState<User | null>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -36,9 +39,41 @@ export function Discussion(props: any) {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const [fetch, { isLoading }] = useLazyGetLastMessageQuery();
+  const disableScroll = useRef<boolean>(false);
+
+  const handleGetLast = useCallback(async () => {
+    if (allMessage[0] && friend && user && !isLoading) {
+      const { data } = await fetch({
+        firstId: user._id,
+        secondId: friend._id,
+        lastIndex: allMessage[0]._id,
+      });
+      if (data && data.allMessage) {
+        disableScroll.current = true;
+        const newList = [...data.allMessage, ...allMessage] as Message[];
+        dispatch(getListMessage(newList));
+      }
+    }
+  }, [fetch, allMessage, friend, user, getListMessage, dispatch, isLoading]);
+
+  const handleScroll = useCallback(
+    (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      if (event.currentTarget.scrollTop === 0) handleGetLast();
+    },
+    [handleGetLast]
+  );
+
+  useEffect(() => {
+    if (!disableScroll.current) {
+      listRef.current?.lastElementChild?.scrollIntoView();
+    }
+    disableScroll.current = false;
+  }, [allMessage]);
+
   useEffect(() => {
     let data = localStorage.getItem("user");
-    if (data === "" || data == null) {
+    if (!data) {
       navigate("/auth");
     } else {
       setUser(JSON.parse(data!));
@@ -52,7 +87,7 @@ export function Discussion(props: any) {
         friendId: friend._id,
       });
       socket.on(`message:${user?._id}:${friend._id}`, (message) => {
-        if (message != null) {
+        if (message && message.allMessage) {
           dispatch(getListMessage(message.allMessage));
         } else {
           dispatch(getListMessage([]));
@@ -99,7 +134,7 @@ export function Discussion(props: any) {
           }}
         />
       </div>
-      <div className={styles.all_message}>
+      <div ref={listRef} onScroll={handleScroll} className={styles.all_message}>
         {allMessage.length !== 0 ? (
           allMessage.map((e, index) => {
             return (
@@ -124,10 +159,7 @@ export function Discussion(props: any) {
           onChange={(e) => {
             setMessage(e.target.value);
           }}
-        ></textarea>
-        {/* <TextField sx={{
-                    width: '100%',
-                }} id="standard-basic" label="Message" variant="standard" /> */}
+        />
         <button
           className={styles.button_send}
           onClick={(e) => {
