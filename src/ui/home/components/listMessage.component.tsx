@@ -13,6 +13,8 @@ import { SearchResult } from "./searchResult.component";
 import boy from "../../../assets/boy.png";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../../utils/socket";
+import edition from "../../../assets/edition.png";
+
 
 export function ListMessage() {
   const navigate = useNavigate();
@@ -64,6 +66,15 @@ export function ListMessage() {
         </div>
         <span>{user?.name}</span>
         <span>{user?.mail}</span>
+        <img
+          src={edition}
+          className={styles.icon}
+          alt=""
+          onClick={() => {
+            localStorage.setItem("user", "");
+            navigate("/auth");
+          }}
+        />
       </div>
       <div className={styles.container_input_search}>
         <input

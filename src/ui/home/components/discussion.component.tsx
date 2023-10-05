@@ -1,5 +1,4 @@
 import styles from "../Home.module.css";
-import edition from "../../../assets/edition.png";
 import { MessageCard } from "./messageCard.component";
 import sendIcon from "../../../assets/send.png";
 import emoji from "../../../assets/emoji.png";
@@ -120,19 +119,10 @@ export function Discussion(props: any) {
         <div className={styles.user_profil}>
           <div className={styles.avatar_circle}>
             <div className={styles.status_circle}></div>
-            <img src={user?.avatar ?? boy} className={styles.avatar} alt="" />
+            <img src={friend?.avatar ?? boy} className={styles.avatar} alt="" />
           </div>
-          <div>{user?.name}</div>
+          <div>{friend?.name}</div>
         </div>
-        <img
-          src={edition}
-          className={styles.icon}
-          alt=""
-          onClick={() => {
-            localStorage.setItem("user", "");
-            navigate("/auth");
-          }}
-        />
       </div>
       <div ref={listRef} onScroll={handleScroll} className={styles.all_message}>
         {allMessage.length !== 0 ? (
