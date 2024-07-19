@@ -32,7 +32,7 @@ export function ListMessage() {
     } else {
       setUser(JSON.parse(data!));
     }
-  }, []);
+  }, [navigate]);
   useEffect(() => {
     if (user) {
       if (!ignore) {

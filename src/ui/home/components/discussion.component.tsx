@@ -54,7 +54,7 @@ export function Discussion(props: any) {
         dispatch(getListMessage(newList));
       }
     }
-  }, [fetch, allMessage, friend, user, getListMessage, dispatch, isLoading]);
+  }, [fetch, allMessage, friend, user, dispatch, isLoading]);
 
   const handleScroll = useCallback(
     (event: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -77,7 +77,7 @@ export function Discussion(props: any) {
     } else {
       setUser(JSON.parse(data!));
     }
-  }, []);
+  }, [navigate]);
   useEffect(() => {
     let ignore = false;
     if (friend && user) {

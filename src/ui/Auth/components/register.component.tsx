@@ -21,6 +21,7 @@ export function RegisterComponent() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          console.log("conf", confirmPwd);
           dispatch(register({ mail, password, name }));
         }}
       >

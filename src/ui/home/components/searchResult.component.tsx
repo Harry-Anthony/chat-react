@@ -20,7 +20,7 @@ export function SearchResult(props: searchResultProps) {
     >
       <div className={styles.avatar_circle}>
         <div className={styles.status_circle}></div>
-        <img src={props.user.avatar ?? boy} className={styles.avatar} />
+        <img alt="avatar" src={props.user.avatar ?? boy} className={styles.avatar} />
       </div>
       <span className={styles.user_name}>{props.user.name}</span>
     </div>
