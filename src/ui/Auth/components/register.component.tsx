@@ -7,6 +7,7 @@ import {
 } from "../../../slice/authSlice/authSlice";
 import { useCallback, useState } from "react";
 import styles from "../Auth.module.css";
+import { validateEmail } from "../../../utils/extension";
 
 export function RegisterComponent() {
   let [name, setName] = useState("");
@@ -65,12 +66,17 @@ export function RegisterComponent() {
       <span className={styles.welcome_text}>WELCOME</span>
       <form
         onSubmit={(e) => {
-          const { message, isValide } = validePwd();
-          if (isValide) {
-            e.preventDefault();
-            dispatch(register({ mail, password, name }));
+          const validMail = validateEmail(mail);
+          if (!validMail.isValide) {
+            alert(validMail.message);
           } else {
-            alert(message);
+            const { message, isValide } = validePwd();
+            if (isValide) {
+              e.preventDefault();
+              dispatch(register({ mail, password, name }));
+            } else {
+              alert(message);
+            }
           }
         }}
       >
