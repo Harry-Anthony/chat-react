@@ -4,5 +4,5 @@ export function validateEmail(email: string) {
   if (!emailPattern.test(email)) {
     return { message: "Invalid email address.", isValide: false };
   }
-  return { message: "Email is valid.", isValide: false };
+  return { message: "Email is valid.", isValide: true };
 }

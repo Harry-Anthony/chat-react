@@ -66,13 +66,13 @@ export function RegisterComponent() {
       <span className={styles.welcome_text}>WELCOME</span>
       <form
         onSubmit={(e) => {
+          e.preventDefault();
           const validMail = validateEmail(mail);
           if (!validMail.isValide) {
             alert(validMail.message);
           } else {
             const { message, isValide } = validePwd();
             if (isValide) {
-              e.preventDefault();
               dispatch(register({ mail, password, name }));
             } else {
               alert(message);
