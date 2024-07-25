@@ -5,7 +5,7 @@ import {
   InputType,
   register,
 } from "../../../slice/authSlice/authSlice";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styles from "../Auth.module.css";
 
 export function RegisterComponent() {
@@ -13,6 +13,51 @@ export function RegisterComponent() {
   let [mail, setMail] = useState("");
   let [password, setPassword] = useState("");
   let [confirmPwd, setConfirmPwd] = useState("");
+  let validePwd = useCallback(() => {
+    const minLength = 8;
+    const uppercasePattern = /[A-Z]/;
+    const lowercasePattern = /[a-z]/;
+    const digitPattern = /[0-9]/;
+    const specialCharPattern = /[!@#\$%\^\&*\)\(+=._-]/;
+
+    if (password.length < minLength) {
+      return {
+        message: "Password must be at least 8 characters long.",
+        isValide: false,
+      };
+    }
+    if (!uppercasePattern.test(password)) {
+      return {
+        message: "Password must contain at least one uppercase letter.",
+        isValide: false,
+      };
+    }
+    if (!lowercasePattern.test(password)) {
+      return {
+        message: "Password must contain at least one lowercase letter.",
+        isValide: false,
+      };
+    }
+    if (!digitPattern.test(password)) {
+      return {
+        message: "Password must contain at least one digit.",
+        isValide: false,
+      };
+    }
+    if (!specialCharPattern.test(password)) {
+      return {
+        message: "Password must contain at least one special character.",
+        isValide: false,
+      };
+    }
+    if (password !== confirmPwd) {
+      return {
+        message: "Passwords do not match.",
+        isValide: false,
+      };
+    }
+    return { message: "Password is valid.", isValide: true };
+  }, [password, confirmPwd]);
 
   let dispatch = useAppDispatch();
   return (
@@ -20,9 +65,13 @@ export function RegisterComponent() {
       <span className={styles.welcome_text}>WELCOME</span>
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          console.log("conf", confirmPwd);
-          dispatch(register({ mail, password, name }));
+          const { message, isValide } = validePwd();
+          if (isValide) {
+            e.preventDefault();
+            dispatch(register({ mail, password, name }));
+          } else {
+            alert(message);
+          }
         }}
       >
         <label>
