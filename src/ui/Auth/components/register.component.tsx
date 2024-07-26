@@ -19,7 +19,7 @@ export function RegisterComponent() {
     const uppercasePattern = /[A-Z]/;
     const lowercasePattern = /[a-z]/;
     const digitPattern = /[0-9]/;
-    const specialCharPattern = /[!@#\$%\^\&*\)\(+=._-]/;
+    const specialCharPattern = /[!@#$%^&*)(+=._-]/;
 
     if (password.length < minLength) {
       return {
