@@ -106,6 +106,22 @@ export function Discussion(props: any) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [friend, user]);
+
+  const handleSendMessage = useCallback(() => {
+    if (message.length !== 0 && friend) {
+      socket.emit("message:create", {
+        body: {
+          userSender: user?._id,
+          userReceiver: friend._id,
+          type: "text",
+          content: message,
+        },
+        isFirstDiscussion: allMessage.length !== 0 ? false : true,
+      });
+      setMessage("");
+    }
+  }, [message, friend, allMessage, user, friend]);
+
   if (!friend) {
     return (
       <div className={styles.animationChat}>
@@ -113,6 +129,7 @@ export function Discussion(props: any) {
       </div>
     );
   }
+
   return (
     <div className={styles.message_container}>
       <div className={styles.header_message}>
@@ -140,9 +157,15 @@ export function Discussion(props: any) {
           <div className={styles.no_message_text}>Aucune discussion</div>
         )}
       </div>
-      <div className={styles.container_input_message}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSendMessage();
+        }}
+        className={styles.container_input_message}
+      >
         <img src={emoji} className={styles.icon} alt="" />
-        <textarea
+        <input
           placeholder="Message"
           className={styles.input_message}
           value={message}
@@ -152,24 +175,14 @@ export function Discussion(props: any) {
         />
         <button
           className={styles.button_send}
+          type="submit"
           onClick={(e) => {
-            if (message.length !== 0 && friend) {
-              socket.emit("message:create", {
-                body: {
-                  userSender: user?._id,
-                  userReceiver: friend._id,
-                  type: "text",
-                  content: message,
-                },
-                isFirstDiscussion: allMessage.length !== 0 ? false : true,
-              });
-              setMessage("");
-            }
+            handleSendMessage();
           }}
         >
           <img src={sendIcon} className={styles.icon} alt="" />
         </button>
-      </div>
+      </form>
     </div>
   );
 }

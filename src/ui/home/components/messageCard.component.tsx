@@ -8,9 +8,9 @@ export function MessageCard(props: any) {
     </div>
   ) : (
     <div className={styles.message_friend_detail}>
-      <div className={styles.min_avatar}>
+      {/* <div className={styles.min_avatar}>
         <img alt="avatar" src={props.avatar ?? boy} className={styles.avatar} />
-      </div>
+      </div> */}
       <div className={styles.message_card_friend}>{props.message}</div>
     </div>
   );

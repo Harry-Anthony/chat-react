@@ -1,6 +1,7 @@
 import styles from "../Home.module.css";
 import { ListTileMessage } from "./listTileMessage.component";
 import closeIcon from "../../../assets/close.png";
+import searchIcon from "../../../assets/search.png";
 import { useEffect, useState } from "react";
 import { User } from "../../../models/i_user";
 import { useAppDispatch, useAppSelector } from "../../../store/hooks";
@@ -13,7 +14,7 @@ import { SearchResult } from "./searchResult.component";
 import boy from "../../../assets/boy.png";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../../utils/socket";
-import edition from "../../../assets/edition.png";
+import disconnect from "../../../assets/disconnect.png";
 
 
 export function ListMessage() {
@@ -67,8 +68,8 @@ export function ListMessage() {
         <span>{user?.name}</span>
         <span>{user?.mail}</span>
         <img
-          src={edition}
-          className={styles.icon}
+          src={disconnect}
+          className={styles.disconnect}
           alt=""
           onClick={() => {
             localStorage.setItem("user", "");
@@ -107,7 +108,16 @@ export function ListMessage() {
             }}
           />
         ) : (
-          <div></div>
+          <img
+            src={searchIcon}
+            className={styles.icon}
+            alt=""
+            onClick={() => {
+              setSearchInput("");
+              dispatch(updateListUser());
+              setIsDiscussion(true);
+            }}
+          />
         )}
       </div>
       {isDiscussion && discussions ? (
