@@ -120,7 +120,7 @@ export function Discussion(props: any) {
       });
       setMessage("");
     }
-  }, [message, friend, allMessage, user, friend]);
+  }, [message, friend, allMessage, user]);
 
   if (!friend) {
     return (
