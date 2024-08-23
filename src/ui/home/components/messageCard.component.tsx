@@ -1,5 +1,4 @@
 import styles from "../Home.module.css";
-import boy from "../../../assets/boy.png";
 
 export function MessageCard(props: any) {
   return props.isMe ? (
