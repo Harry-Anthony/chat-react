@@ -1,7 +1,11 @@
 import styles from "../Home.module.css";
 import boy from "../../../assets/boy.png";
-import { useAppDispatch } from "../../../store/hooks";
-import { selectFriendForDiscussion } from "../../../slice/discussionSlice/discussionSlice";
+import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import {
+  getListMessage,
+  selectFriend,
+  selectFriendForDiscussion,
+} from "../../../slice/discussionSlice/discussionSlice";
 
 export interface ListTileMessageProps {
   message: any;
@@ -9,11 +13,16 @@ export interface ListTileMessageProps {
 
 export function ListTileMessage(props: ListTileMessageProps) {
   const dispatch = useAppDispatch();
+  const friend = useAppSelector(selectFriend);
+
   return (
     <div
       className={styles.list_tile_message}
       onClick={() => {
-        dispatch(selectFriendForDiscussion(props.message.friend));
+        if (friend?._id !== props.message.friend._id) {
+          dispatch(getListMessage([]));
+          dispatch(selectFriendForDiscussion(props.message.friend));
+        }
       }}
     >
       <div className={styles.avatar_circle}>
