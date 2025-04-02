@@ -8,7 +8,7 @@
 }
 
 .form {
-    height: 70vh;
+    height: 648px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -68,6 +68,7 @@ input:focus {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-size: cover;
 }
 .form button {
     margin-top: 40px;
