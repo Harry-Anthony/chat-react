@@ -64,8 +64,8 @@ export function Discussion(props: any) {
   );
 
   useEffect(() => {
-    if (!disableScroll.current) {
-      listRef.current?.lastElementChild?.scrollIntoView();
+    if (!disableScroll.current && allMessage.length) {
+      listRef.current?.lastElementChild?.scrollIntoView({block: "nearest", inline: "nearest"});
     }
     disableScroll.current = false;
   }, [allMessage]);

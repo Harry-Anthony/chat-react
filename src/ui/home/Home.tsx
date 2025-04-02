@@ -2,17 +2,24 @@ import { ListMessage } from "./components/listMessage.component";
 import { Discussion } from "./components/discussion.component";
 import styles from "./Home.module.css";
 import { Drawer } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import inbox from "../../assets/Message.svg";
 
 export function Home() {
   const [open, setOpen] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState(false);
+  const isInitial = useRef(false)
   useEffect(() => {
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
     const handleResize = () => {
       if (window.innerWidth <= 630) {
+        if(!isInitial.current) {
+          isInitial.current = true;
+          setOpen(true);
+        }
         setIsMobile(true);
-        setOpen(false);
       } else {
         setIsMobile(false);
       }
