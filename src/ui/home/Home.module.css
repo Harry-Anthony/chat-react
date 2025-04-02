@@ -13,7 +13,7 @@
 .drawer {
   position: absolute;
   right: 50px;
-  top: 45px;
+  top: 20px;
   cursor: pointer;
 }
 .drawer_component {
@@ -42,6 +42,7 @@
   width: 20px;
   height: 20px;
   margin: 2px 8px;
+  cursor: pointer;
 }
 
 .disconnect {
@@ -49,6 +50,7 @@
   height: 20px;
   margin: 2px 8px;
   margin-top: 20px;
+  cursor: pointer;
 }
 
 .menu_item {
@@ -177,7 +179,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 20px 50px;
+  /* padding: 20px 50px; */
+  padding-right: 10px;
 }
 
 .header_message {

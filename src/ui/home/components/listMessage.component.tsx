@@ -15,6 +15,10 @@ import boy from "../../../assets/boy.png";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../../../utils/socket";
 import disconnect from "../../../assets/disconnect.png";
+import {
+  getListMessage,
+  selectFriendForDiscussion,
+} from "../../../slice/discussionSlice/discussionSlice";
 
 export function ListMessage(props: {
   onClickItem?: () => void;
@@ -89,6 +93,8 @@ export function ListMessage(props: {
           className={styles.disconnect}
           alt=""
           onClick={() => {
+            dispatch(getListMessage([]));
+            dispatch(selectFriendForDiscussion(null));
             localStorage.setItem("user", "");
             navigate("/auth");
           }}

@@ -23,7 +23,7 @@ export const discussionSlice = createSlice({
     getListMessage: (state, action: PayloadAction<Message[]>) => {
       state.listMessage = action.payload;
     },
-    selectFriendForDiscussion: (state, action: PayloadAction<User>) => {
+    selectFriendForDiscussion: (state, action: PayloadAction<User | null>) => {
       state.friendSelected = action.payload;
     },
   },
