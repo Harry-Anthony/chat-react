@@ -10,7 +10,6 @@ export function Home() {
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const handleResize = () => {
-      console.log("width ", window.innerWidth);
       if (window.innerWidth <= 630) {
         setIsMobile(true);
         setOpen(false);
@@ -18,6 +17,7 @@ export function Home() {
         setIsMobile(false);
       }
     };
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
