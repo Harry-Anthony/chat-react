@@ -16,8 +16,10 @@ import { useNavigate } from "react-router-dom";
 import { socket } from "../../../utils/socket";
 import disconnect from "../../../assets/disconnect.png";
 
-
-export function ListMessage() {
+export function ListMessage(props: {
+  onClickItem?: () => void;
+  onClose?: () => void;
+}) {
   const navigate = useNavigate();
   let ignore = false;
   const [user, setUser] = useState<User | null>(null);
@@ -59,6 +61,21 @@ export function ListMessage() {
   return (
     <div className={styles.list_message}>
       <div className={styles.user_info}>
+        {!!props.onClose && (
+          <div className={styles.close} onClick={props.onClose}>
+            <img
+              src={closeIcon}
+              className={styles.icon}
+              width="24"
+              alt=""
+              onClick={() => {
+                setSearchInput("");
+                dispatch(updateListUser());
+                setIsDiscussion(true);
+              }}
+            />
+          </div>
+        )}
         <div className={styles.user_profil}>
           <div className={styles.avatar_circle}>
             <div className={styles.status_circle}></div>
@@ -125,13 +142,25 @@ export function ListMessage() {
           .slice(0)
           .reverse()
           .map((e, index) => {
-            return <ListTileMessage key={`tile-${index}`} message={e} />;
+            return (
+              <ListTileMessage
+                onClickItem={props.onClickItem}
+                key={`tile-${index}`}
+                message={e}
+              />
+            );
             // eslint-disable-next-line array-callback-return
           })
       ) : listUser ? (
         listUser.map((e, index) => {
           if (e._id !== user?._id) {
-            return <SearchResult key={`srch-${index}`} user={e} />;
+            return (
+              <SearchResult
+                onClickItem={props.onClickItem}
+                key={`srch-${index}`}
+                user={e}
+              />
+            );
           }
           return null;
         })

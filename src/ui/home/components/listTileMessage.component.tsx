@@ -9,16 +9,19 @@ import {
 
 export interface ListTileMessageProps {
   message: any;
+  onClickItem?: () => void;
 }
 
 export function ListTileMessage(props: ListTileMessageProps) {
   const dispatch = useAppDispatch();
   const friend = useAppSelector(selectFriend);
+  const {onClickItem} = props;
 
   return (
     <div
       className={styles.list_tile_message}
       onClick={() => {
+        onClickItem?.();
         if (friend?._id !== props.message.friend._id) {
           dispatch(getListMessage([]));
           dispatch(selectFriendForDiscussion(props.message.friend));
@@ -39,7 +42,7 @@ export function ListTileMessage(props: ListTileMessageProps) {
           {props.message.message.content}
         </span>
       </div>
-      <div className={styles.message_date}>1 min</div>
+      <div className={styles.message_date}></div>
     </div>
   );
 }
