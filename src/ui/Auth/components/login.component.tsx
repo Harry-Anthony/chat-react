@@ -9,8 +9,8 @@ import { useState } from "react";
 import styles from "../Auth.module.css";
 
 export function LoginComponent() {
-  let [mail, setMail] = useState("");
-  let [password, setPassword] = useState("");
+  let [mail, setMail] = useState("test@test.mail");
+  let [password, setPassword] = useState("1234");
   let dispatch = useAppDispatch();
   return (
     <div className={styles.main_form}>
@@ -18,13 +18,13 @@ export function LoginComponent() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          console.log("login");
           dispatch(login({ mail, password }));
         }}
       >
         <label>
           <i className="fa fa-user icon"></i>
           <input
+            value={mail}
             type="mail"
             name="mail"
             placeholder="mail"
@@ -34,6 +34,7 @@ export function LoginComponent() {
         </label>
         <label>
           <input
+            value={password}
             type="password"
             name="password"
             placeholder="password"
